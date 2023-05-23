@@ -1,0 +1,26 @@
+import docx
+import pandas as pd
+
+def extract_table_from_word(filename):
+    doc = docx.Document(filename)
+    tables = doc.tables
+    if len(tables) > 0:
+        table = tables[17]  # Assuming you want to extract the first table
+        data = []
+        for row in table.rows:
+            row_data = []
+            for cell in row.cells:
+                row_data.append(cell.text)
+            data.append(row_data)
+
+        df = pd.DataFrame(data[1:], columns=data[0])
+        return df
+    else:
+        print("No tables found in the document.")
+        return None
+
+# Usage
+filename = "/content/Bilans et comptes de résultat des Banques et établissements financiers de l'UMOA - 2002.docx"
+df = extract_table_from_word(filename)
+if df is not None:
+ df  # The dataframe will be displayed directly without using print()
